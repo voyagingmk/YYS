@@ -1,4 +1,6 @@
 
+# -*- coding: utf-8 -*-
+
 import cv2,numpy,time,os, random
 from PIL import ImageGrab
 from winsound import Beep
@@ -11,12 +13,13 @@ def locate(target,want, show=0, msg=0):
     location=numpy.where(result>=treshold)
 
     if msg:  #显示正式寻找目标名称，调试时开启
-        print(c_name,'searching... ')
+        print(c_name,'searching... location', location)
 
     h,w=want.shape[:-1] #want.shape[:-1]
 
     n,ex,ey=1,0,0
     for pt in zip(*location[::-1]):    #其实这里经常是空的
+        #print('pt', pt)
         x,y=pt[0]+int(w/2),pt[1]+int(h/2)
         if (x-ex)+(y-ey)<15:  #去掉邻近重复的点
             continue
@@ -35,7 +38,7 @@ def locate(target,want, show=0, msg=0):
         cv2.waitKey(0) 
         cv2.destroyAllWindows()
 
-    if len(loc_pos)==0:
+    if msg and len(loc_pos)==0:
         print(c_name,'not find')
 
     return loc_pos
@@ -76,7 +79,7 @@ def cut(screen,upleft,downright):
 #随机偏移坐标，防止游戏的外挂检测。p是原坐标，w、n是目标图像宽高，返回目标范围内的一个随机坐标
 def cheat(p, w, h):
     a,b = p
-    w, h = int(w/3), int(h/3)
+    w, h = int(w/4), int(h/4)
     c,d = random.randint(-w, w),random.randint(-h, h)
     e,f = a + c, b + d
     y = [e, f]
